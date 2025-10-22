@@ -1,80 +1,51 @@
 import React, { useState } from "react";
 
-export default function AddItemForm({ onAddItem }) {
-  const [name, setName] = useState("");
-  const [quantity, setQuantity] = useState("");
-  const [category, setCategory] = useState("");
-  const [newCategory, setNewCategory] = useState("");
-  const [categories, setCategories] = useState([
-    "Stationery",
-    "Electronics",
-    "Accessories",
-    "Food",
-  ]);
+function AddItemForm({ onAddItem }) {
+  const [formData, setFormData] = useState({
+    name: "",
+    category: "",
+    quantity: "",
+  });
+
+  function handleChange(e) {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  }
 
   function handleSubmit(e) {
     e.preventDefault();
-
-    // If user typed a new category, use it and add it to the list
-    const finalCategory = newCategory || category;
-    if (!name || !quantity || !finalCategory) return;
-
-    const newItem = {
-      name,
-      quantity: Number(quantity),
-      category: finalCategory,
-    };
-
-    onAddItem(newItem);
-
-    // Add new category if it's new
-    if (newCategory && !categories.includes(newCategory)) {
-      setCategories([...categories, newCategory]);
-    }
-
-    // Reset form
-    setName("");
-    setQuantity("");
-    setCategory("");
-    setNewCategory("");
+    if (!formData.name || !formData.category || !formData.quantity) return;
+    onAddItem(formData);
+    setFormData({ name: "", category: "", quantity: "" });
   }
 
   return (
     <form onSubmit={handleSubmit}>
+      <h2>Add New Item</h2>
       <input
         type="text"
+        name="name"
         placeholder="Item name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
+        value={formData.name}
+        onChange={handleChange}
       />
-
+      <input
+        type="text"
+        name="category"
+        placeholder="Category"
+        value={formData.category}
+        onChange={handleChange}
+      />
       <input
         type="number"
+        name="quantity"
         placeholder="Quantity"
-        value={quantity}
-        onChange={(e) => setQuantity(e.target.value)}
+        value={formData.quantity}
+        onChange={handleChange}
       />
-
-      <select value={category} onChange={(e) => setCategory(e.target.value)}>
-        <option value="">Select category</option>
-        {categories.map((cat) => (
-          <option key={cat} value={cat}>
-            {cat}
-          </option>
-        ))}
-        <option value="new">Add new category…</option>
-      </select>
-
-      {category === "new" && (
-        <input
-          type="text"
-          placeholder="Enter new category"
-          value={newCategory}
-          onChange={(e) => setNewCategory(e.target.value)}
-        />
-      )}
-
       <button type="submit">Add Item</button>
     </form>
   );
 }
+
+export default AddItemForm;

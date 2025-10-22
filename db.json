@@ -1,3 +1,10 @@
 {
-  "items": []
+  "items": [
+    {
+      "name": "iphone 17",
+      "quantity": 4,
+      "category": "Electronics",
+      "id": 1
+    }
+  ]
 }
